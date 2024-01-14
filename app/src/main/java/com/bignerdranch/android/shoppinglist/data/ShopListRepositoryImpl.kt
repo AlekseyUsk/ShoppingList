@@ -7,8 +7,9 @@ import com.bignerdranch.android.shoppinglist.domain.ShopListRepository
 
 object ShopListRepositoryImpl : ShopListRepository {
 
-    //заглушка в переменную записал данные(тут использовать базу данных)
-    private val shopList = mutableListOf<ShopItem>()
+    //сдела что при редактировании элемент оставался на своем месте по id а не уходил в конец списка
+    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
+
     private val shopListLiveData = MutableLiveData<List<ShopItem>>()
 
     //переменная для авто добавления id элементу
@@ -39,7 +40,7 @@ object ShopListRepositoryImpl : ShopListRepository {
     override fun editShopItem(shopItem: ShopItem) {
         val oldElement = getShopItem(shopItem.id)
         shopList.remove(oldElement)
-        shopList.add(shopItem)
+        addShopItem(shopItem)
     }
 
     override fun getShopItem(shopItemId: Int): ShopItem {
