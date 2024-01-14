@@ -19,7 +19,5 @@ class MainActivity : AppCompatActivity() {
         {
             Log.d("@@@", it.toString())
         }
-
-        viewModel.getShopList()
     }
 }
