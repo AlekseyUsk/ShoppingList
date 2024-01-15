@@ -38,16 +38,26 @@ class Adapter : RecyclerView.Adapter<Adapter.ShopItemViewHolder>() {
         } else {
             "Not Active"
         }
-        shopItemViewHolder.tvName.text = "${shopItem.name} $status"
-        shopItemViewHolder.tvCount.text = shopItem.count.toString()
+
         shopItemViewHolder.itemView.setOnLongClickListener {
             true
         }
         if (shopItem.enabled) {
+            shopItemViewHolder.tvName.text = "${shopItem.name} $status"
+            shopItemViewHolder.tvCount.text = shopItem.count.toString()
             shopItemViewHolder.tvName.setTextColor(
                 ContextCompat.getColor(
                     shopItemViewHolder.itemView.context,
                     android.R.color.holo_red_light
+                )
+            )
+        } else {
+            shopItemViewHolder.tvName.text = ""
+            shopItemViewHolder.tvCount.text = ""
+            shopItemViewHolder.tvName.setTextColor(
+                ContextCompat.getColor(
+                    shopItemViewHolder.itemView.context,
+                    android.R.color.white
                 )
             )
         }
