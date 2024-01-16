@@ -9,7 +9,7 @@ import com.bignerdranch.android.shoppinglist.R
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var adapter: Adapter
+    private lateinit var shopListAdapter: ShopListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,25 +17,25 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
-            adapter.shopList = it
+            shopListAdapter.shopList = it
         }
         initRecyclerView()
     }
 
     private fun initRecyclerView() {
         val recyclerViewShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
-        adapter = Adapter()
-        recyclerViewShopList.adapter = adapter
+        shopListAdapter = ShopListAdapter()
+        recyclerViewShopList.adapter = shopListAdapter
         /**после того как создал константу(кооличество пулов где указали)
         в адаптере по увеличеванию пула вихолдеров прописываем тут
         и так как у нас 2 VIewType передаем в параметры*/
         recyclerViewShopList.recycledViewPool.setMaxRecycledViews(
-            Adapter.VIEW_TYPE_ENABLED,
-            Adapter.MAX_POOL_SIZE
+            ShopListAdapter.VIEW_TYPE_ENABLED,
+            ShopListAdapter.MAX_POOL_SIZE
         )
         recyclerViewShopList.recycledViewPool.setMaxRecycledViews(
-            Adapter.VIEW_TYPE_DISABLED,
-            Adapter.MAX_POOL_SIZE
+            ShopListAdapter.VIEW_TYPE_DISABLED,
+            ShopListAdapter.MAX_POOL_SIZE
         )
     }
 }

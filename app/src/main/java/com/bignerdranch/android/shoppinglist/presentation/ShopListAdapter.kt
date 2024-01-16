@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.shoppinglist.R
 import com.bignerdranch.android.shoppinglist.domain.ShopItem
 
-class Adapter : RecyclerView.Adapter<Adapter.ShopItemViewHolder>() {
+class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
     var count = 0
 
