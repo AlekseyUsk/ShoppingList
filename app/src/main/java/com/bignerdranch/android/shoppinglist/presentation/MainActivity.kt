@@ -40,11 +40,11 @@ class MainActivity : AppCompatActivity() {
             ShopListAdapter.MAX_POOL_SIZE
         )
     }
-    private fun onClick(){
-        shopListAdapter.onShopItemClickListener = object : ShopListAdapter.OnShopItemClickListener{
-            override fun onShopItemClick(shopItem: ShopItem) {
-                viewModel.changeEnableState(shopItem)
-            }
+
+    private fun onClick() {
+        //исп переменую куда при помощи лямбды передал fun
+        shopListAdapter.onShopItemClickListener = {
+            viewModel.changeEnableState(it)
         }
     }
 }
