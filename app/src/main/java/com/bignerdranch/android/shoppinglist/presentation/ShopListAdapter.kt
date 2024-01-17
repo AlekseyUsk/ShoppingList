@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.shoppinglist.R
 import com.bignerdranch.android.shoppinglist.domain.ShopItem
@@ -18,10 +19,23 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         null //в переменную поместил fun (лямбда)
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
+    /**1 - СОЗДАЕМ КЛАСС ShopListDiffCallback И ЗАПИСЫВАЕМ В ПЕРЕМЕННУЮ callback
+     * 2 - callback ПЕРЕДАЕМ ДЛЯ ВЫЧИСЛЕНИЙ В val diffResult = DiffUtil.calculateDiff(callback)
+     * 3 - В diffResult ЗАПИСЫВАЮТСЯ ВСЕ ВЫЧИСЛЕНИЯ
+     * 4 - diffResult.dispatchUpdatesTo(this) СООБЩАЕТ АДАПТЕРУ КАКИЕ ИЗМЕНЕНИЯ НУЖНО ПЕРЕРИСОВАТЬ
+     * 5 - field = value ОБНОВЛЯЕТСЯ СПИСОК*/
+
     var shopList = listOf<ShopItem>()
         set(value) {
+            /**устанавливаю на Callback oldList свой лист - shopList
+            на измененный newList - value*/
+            val callback = ShopListDiffCallback(shopList, value)
+
+            /**запускаем вычисления и записываем в переменную все изменения*/
+            val diffResult = DiffUtil.calculateDiff(callback)
+            /**ПЕРЕДАЕМ АДАПТЕРУ ВСЕ ИЗМЕНЕНИЯ*/
+            diffResult.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
         }
 
     class ShopItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -34,7 +48,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         with(shopItemViewHolder) {
             tvName.text = shopItem.name
             tvCount.text = shopItem.count.toString()
-            with(itemView){
+            with(itemView) {
                 setOnLongClickListener {
                     onShopItemClickLongListener?.invoke(shopItem) //вызвал эту функцию при помощи
                     true
