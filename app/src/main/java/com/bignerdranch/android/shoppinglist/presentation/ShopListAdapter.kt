@@ -14,7 +14,9 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
 
     private var count = 0
 
-    var onShopItemClickListener: ((ShopItem) -> Unit)? = null //в переменную поместил fun (лямбда)
+    var onShopItemClickLongListener: ((ShopItem) -> Unit)? =
+        null //в переменную поместил fun (лямбда)
+    var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
     var shopList = listOf<ShopItem>()
         set(value) {
@@ -32,10 +34,14 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         with(shopItemViewHolder) {
             tvName.text = shopItem.name
             tvCount.text = shopItem.count.toString()
-            itemView.setOnLongClickListener {
-                onShopItemClickListener?.invoke(shopItem) //вызвал эту функцию при помощи
-                // этой переменной - исп invoke так как fun может быть null
-            true
+            with(itemView){
+                setOnLongClickListener {
+                    onShopItemClickLongListener?.invoke(shopItem) //вызвал эту функцию при помощи
+                    true
+                }
+                setOnClickListener {
+                    onShopItemClickListener?.invoke(shopItem)
+                }
             }
         }
     }

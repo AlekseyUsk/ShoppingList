@@ -1,11 +1,11 @@
 package com.bignerdranch.android.shoppinglist.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.shoppinglist.R
-import com.bignerdranch.android.shoppinglist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,9 +42,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onClick() {
-        //исп переменую куда при помощи лямбды передал fun
-        shopListAdapter.onShopItemClickListener = {
-            viewModel.changeEnableState(it)
+        with(shopListAdapter) {
+            //исп переменую куда при помощи лямбды передал fun
+            onShopItemClickLongListener = {
+                viewModel.changeEnableState(it)
+            }
+            onShopItemClickListener = {
+                Log.d("MainActivity", "ЭКРАН ДЛЯ РЕДАКТИРОВАНИЯ ${it.toString()}")
+            }
         }
     }
 }
