@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.shoppinglist.R
 import com.bignerdranch.android.shoppinglist.domain.ShopItem
 
-class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
+class ShopListAdapter :
+    ListAdapter<ShopItem, ShopListAdapter.ShopItemViewHolder>(ShopItemDiffCallback()) {
 
     private var count = 0
 
@@ -19,24 +20,22 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         null //в переменную поместил fun (лямбда)
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
-    /**1 - СОЗДАЕМ КЛАСС ShopListDiffCallback И ЗАПИСЫВАЕМ В ПЕРЕМЕННУЮ callback
-     * 2 - callback ПЕРЕДАЕМ ДЛЯ ВЫЧИСЛЕНИЙ В val diffResult = DiffUtil.calculateDiff(callback)
-     * 3 - В diffResult ЗАПИСЫВАЮТСЯ ВСЕ ВЫЧИСЛЕНИЯ
-     * 4 - diffResult.dispatchUpdatesTo(this) СООБЩАЕТ АДАПТЕРУ КАКИЕ ИЗМЕНЕНИЯ НУЖНО ПЕРЕРИСОВАТЬ
-     * 5 - field = value ОБНОВЛЯЕТСЯ СПИСОК*/
-
-    var shopList = listOf<ShopItem>()
-        set(value) {
-            /**устанавливаю на Callback oldList свой лист - shopList
-            на измененный newList - value*/
-            val callback = ShopListDiffCallback(shopList, value)
-
-            /**запускаем вычисления и записываем в переменную все изменения*/
-            val diffResult = DiffUtil.calculateDiff(callback)
-            /**ПЕРЕДАЕМ АДАПТЕРУ ВСЕ ИЗМЕНЕНИЯ*/
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-        }
+    /**1 - СОЗДАЕМ КЛАСС ShopItemDiffCallback
+     * 2 - адаптер унаследуемся от ListAdapter ShopListAdapter : ListAdapter<ShopItem, ShopListAdapter.ShopItemViewHolder>(ShopItemDiffCallback())
+     * 3 - плюсы этого адаптера что он скрывает всю логику убираем или недобавляем
+     * //    var shopList = listOf<ShopItem>()
+    //        set(value) {
+    //            /**устанавливаю на Callback oldList свой лист - shopList
+    //            на измененный newList - value*/
+    //            val callback = ShopListDiffCallback(shopList, value)
+    //
+    //            /**запускаем вычисления и записываем в переменную все изменения*/
+    //            val diffResult = DiffUtil.calculateDiff(callback)
+    //            /**ПЕРЕДАЕМ АДАПТЕРУ ВСЕ ИЗМЕНЕНИЯ*/
+    //            diffResult.dispatchUpdatesTo(this)
+    //            field = value
+    //        }
+     * 4 -override fun getItemCount(): Int - ненужен работа со списком под капотом*/
 
     class ShopItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val tvName: TextView = view.findViewById<TextView>(R.id.tv_name)
@@ -44,7 +43,8 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     }
 
     override fun onBindViewHolder(shopItemViewHolder: ShopItemViewHolder, position: Int) {
-        val shopItem = shopList[position]
+        /** 5 - вместо этого val shopItem = shopList[position] получить эл по позиции так можно ->  val shopItem = getItem(position)*/
+        val shopItem = getItem(position)
         with(shopItemViewHolder) {
             tvName.text = shopItem.name
             tvCount.text = shopItem.count.toString()
@@ -58,14 +58,6 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
                 }
             }
         }
-    }
-
-    interface OnShopItemClickListener {
-        fun onShopItemClick(shopItem: ShopItem)
-    }
-
-    override fun getItemCount(): Int {
-        return shopList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
@@ -102,7 +94,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     нужен для того чтобы использовать нужный макет в зависимости от типа элемента
     в методе onCreateViewHolder*/
     override fun getItemViewType(position: Int): Int {
-        val item = shopList[position]
+        val item = getItem(position)
         return if (item.enabled) {
             VIEW_TYPE_ENABLED
         } else {
