@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.shoppinglist.R
+import com.bignerdranch.android.shoppinglist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
             shopListAdapter.shopList = it
         }
         initRecyclerView()
+        onClick()
     }
 
     private fun initRecyclerView() {
@@ -37,5 +39,12 @@ class MainActivity : AppCompatActivity() {
             ShopListAdapter.VIEW_TYPE_DISABLED,
             ShopListAdapter.MAX_POOL_SIZE
         )
+    }
+    private fun onClick(){
+        shopListAdapter.onShopItemClickListener = object : ShopListAdapter.OnShopItemClickListener{
+            override fun onShopItemClick(shopItem: ShopItem) {
+                viewModel.changeEnableState(shopItem)
+            }
+        }
     }
 }

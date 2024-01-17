@@ -12,7 +12,9 @@ import com.bignerdranch.android.shoppinglist.domain.ShopItem
 
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
-    var count = 0
+    private var count = 0
+
+    var onShopItemClickListener: OnShopItemClickListener? = null
 
     var shopList = listOf<ShopItem>()
         set(value) {
@@ -27,9 +29,18 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
 
     override fun onBindViewHolder(shopItemViewHolder: ShopItemViewHolder, position: Int) {
         val shopItem = shopList[position]
-        shopItemViewHolder.tvName.text = shopItem.name
-        shopItemViewHolder.tvCount.text = shopItem.count.toString()
-        shopItemViewHolder.itemView.setOnLongClickListener { true }
+        with(shopItemViewHolder) {
+            tvName.text = shopItem.name
+            tvCount.text = shopItem.count.toString()
+            itemView.setOnLongClickListener {
+                onShopItemClickListener?.onShopItemClick(shopItem)
+            true
+            }
+        }
+    }
+
+    interface OnShopItemClickListener {
+        fun onShopItemClick(shopItem: ShopItem)
     }
 
     override fun getItemCount(): Int {
@@ -50,17 +61,19 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     }
 
     /**ЭТОТ МЕТОД ВЫЗЫВАЕТСЯ ТОГДА КОГДА НАШ МАКЕТ ХОТЯТ ПЕРЕИСПОЛЬЗОВАТЬ
-     И ТУТ МЫ МОЖЕМ УСТАНОВИТЬ ЗНАЧЕНИЯ ПО УМОЛЧАНИЮ */
+    И ТУТ МЫ МОЖЕМ УСТАНОВИТЬ ЗНАЧЕНИЯ ПО УМОЛЧАНИЮ */
     override fun onViewRecycled(shopItemViewHolder: ShopItemViewHolder) {
         super.onViewRecycled(shopItemViewHolder)
-        shopItemViewHolder.tvName.text = ""
-        shopItemViewHolder.tvCount.text = ""
-        shopItemViewHolder.tvName.setTextColor(
-            ContextCompat.getColor(
-                shopItemViewHolder.itemView.context,
-                android.R.color.white
+        with(shopItemViewHolder) {
+            tvName.text = ""
+            tvCount.text = ""
+            tvName.setTextColor(
+                ContextCompat.getColor(
+                    shopItemViewHolder.itemView.context,
+                    android.R.color.white
+                )
             )
-        )
+        }
     }
 
     /**ЭТОТ МЕТОД НУЖЕН ДЛЯ ТЕХ СЛУЧАЕВ КОГДА РАЗНЫЕ ОБЬЕКТЫ ТРЕБУЮТ РАЗНЫЕ ЛАЙАУТЫ(МАКЕТЫ)
@@ -85,3 +98,4 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
 /**есть проблема когда пулл вихолдеров заполнен и в этом пуле нет нужного вихолдера
 то создается нужный вихолдер поэтому в логах при скролле появляются опять вихолдеры
 вместо к примеру 20 эта проблема решается увеличиванием пулла вихолдеров*/
+
