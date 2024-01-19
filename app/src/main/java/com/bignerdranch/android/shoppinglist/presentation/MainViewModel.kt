@@ -2,9 +2,9 @@ package com.bignerdranch.android.shoppinglist.presentation
 
 import androidx.lifecycle.ViewModel
 import com.bignerdranch.android.shoppinglist.data.ShopListRepositoryImpl
-import com.bignerdranch.android.shoppinglist.domain.DeleteShopItemUseCase
-import com.bignerdranch.android.shoppinglist.domain.EditShopItemUseCase
-import com.bignerdranch.android.shoppinglist.domain.GetShopListUseCase
+import com.bignerdranch.android.shoppinglist.domain.useCase.DeleteShopItemUseCase
+import com.bignerdranch.android.shoppinglist.domain.useCase.EditShopItemUseCase
+import com.bignerdranch.android.shoppinglist.domain.useCase.GetShopListUseCase
 import com.bignerdranch.android.shoppinglist.domain.ShopItem
 
 class MainViewModel : ViewModel() {

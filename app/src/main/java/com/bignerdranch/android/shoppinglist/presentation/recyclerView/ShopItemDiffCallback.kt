@@ -1,9 +1,8 @@
-package com.bignerdranch.android.shoppinglist.presentation
+package com.bignerdranch.android.shoppinglist.presentation.recyclerView
 
 import androidx.recyclerview.widget.DiffUtil
 import com.bignerdranch.android.shoppinglist.domain.ShopItem
 
-               /**ВТОРОЙ СПОСОБ ЛУЧШЕ 1го*/
 class ShopItemDiffCallback : DiffUtil.ItemCallback<ShopItem>() {
 
     override fun areItemsTheSame(oldItem: ShopItem, newItem: ShopItem): Boolean {

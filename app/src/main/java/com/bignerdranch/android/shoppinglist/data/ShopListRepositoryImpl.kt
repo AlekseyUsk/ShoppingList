@@ -3,7 +3,7 @@ package com.bignerdranch.android.shoppinglist.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bignerdranch.android.shoppinglist.domain.ShopItem
-import com.bignerdranch.android.shoppinglist.domain.ShopListRepository
+import com.bignerdranch.android.shoppinglist.domain.repository.ShopListRepository
 import kotlin.random.Random
 
 object ShopListRepositoryImpl : ShopListRepository {
@@ -13,7 +13,6 @@ object ShopListRepositoryImpl : ShopListRepository {
 
     private val shopListLiveData = MutableLiveData<List<ShopItem>>()
 
-    //переменная для авто добавления id элементу
     private var autoIncrementId = 0
 
     init {

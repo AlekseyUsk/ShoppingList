@@ -1,6 +1,7 @@
-package com.bignerdranch.android.shoppinglist.domain
+package com.bignerdranch.android.shoppinglist.domain.repository
 
 import androidx.lifecycle.LiveData
+import com.bignerdranch.android.shoppinglist.domain.ShopItem
 
 interface ShopListRepository {
 
