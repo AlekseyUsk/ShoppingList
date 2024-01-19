@@ -2,7 +2,9 @@ package com.bignerdranch.android.shoppinglist.presentation.recyclerView
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.shoppinglist.R
 import com.bignerdranch.android.shoppinglist.domain.ShopItem
 
@@ -11,6 +13,7 @@ class ShopListAdapter :
 
     var onShopItemClickLongListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
+    lateinit var shopListAdapter: ShopListAdapter
 
     override fun onBindViewHolder(shopItemViewHolder: ShopItemViewHolder, position: Int) {
         val shopItem = getItem(position)
