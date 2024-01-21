@@ -42,18 +42,10 @@ class MainActivity : AppCompatActivity() {
         setupSwipeListener(recyclerViewShopList)
     }
 
-    /**СВАЙП + УДАЛЕНИЕ ЭЛЕМЕНТА
-     * 1 - нужен симплкалбек из класса айтем тач хелпер
-     * передаем в конструктор направление перемещение олбьекта и свайпа
-     * 2 - переопределяем 2 шт метода
-     * 3 - в методе onSwiped получаю элемент по которому произошло нажатие и удаляю его
-     * 4 - создаем каллбек itemTouchHelper и в конструктор передаем callback
-     * 5 - устанавливаем itemTouchHelper.attachToRecyclerView(rvShopList)*/
     private fun setupSwipeListener(recyclerView: RecyclerView) {
         val callback = object : ItemTouchHelper.SimpleCallback(
             0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
-            /**этот метод неиспользую -> вернул просто return false */
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -62,7 +54,6 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
 
-            /**в методе onSwiped получаю элемент по которому произошло нажатие и удаляю его*/
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = shopListAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteShopItem(item)
