@@ -3,10 +3,11 @@ package com.bignerdranch.android.shoppinglist.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bignerdranch.android.shoppinglist.domain.ShopItem
+import com.bignerdranch.android.shoppinglist.domain.repository.ShopItemRepository
 import com.bignerdranch.android.shoppinglist.domain.repository.ShopListRepository
 import kotlin.random.Random
 
-object ShopListRepositoryImpl : ShopListRepository {
+object ShopListRepositoryImpl : ShopListRepository,ShopItemRepository {
 
     //сдела что при редактировании элемент оставался на своем месте по id а не уходил в конец списка
     private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
