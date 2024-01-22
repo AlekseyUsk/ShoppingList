@@ -6,7 +6,7 @@ import com.bignerdranch.android.shoppinglist.domain.ShopItem
 import com.bignerdranch.android.shoppinglist.domain.repository.ShopListRepository
 import kotlin.random.Random
 
-object ShopListRepositoryImpl : ShopListRepository{
+object ShopListRepositoryImpl : ShopListRepository {
 
     //сдела что при редактировании элемент оставался на своем месте по id а не уходил в конец списка
     private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
@@ -16,14 +16,14 @@ object ShopListRepositoryImpl : ShopListRepository{
     private var autoIncrementId = 0
 
     init {
-        for (i in 0 until 1000){
-            val item = ShopItem("Name $i",i,Random.nextBoolean())
+        for (i in 0 until 10) {
+            val item = ShopItem("Name $i", i, Random.nextBoolean())
             addShopItem(item)
         }
     }
 
     override fun addShopItem(shopItem: ShopItem) {
-    //сделал проверку иначе вылетит ошибка
+        //сделал проверку иначе вылетит ошибка
         if (shopItem.id == ShopItem.UNDEFINED_ID) {
             shopItem.id = autoIncrementId
             autoIncrementId++
@@ -53,7 +53,7 @@ object ShopListRepositoryImpl : ShopListRepository{
         return shopListLiveData
     }
 
-    private fun updateList(){
+    private fun updateList() {
         shopListLiveData.value = shopList.toList()
     }
 }

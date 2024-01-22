@@ -3,6 +3,8 @@ package com.bignerdranch.android.shoppinglist.presentation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -10,15 +12,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bignerdranch.android.shoppinglist.R
 import com.bignerdranch.android.shoppinglist.domain.ShopItem
-import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class ShopItemActivity : AppCompatActivity() {
 
     private lateinit var shopItemViewModel: ShopItemViewModel
 
-    private lateinit var tilName: TextInputEditText
-    private lateinit var tilCount: TextInputEditText
-    private lateinit var editText: EditText
+    private lateinit var tilName: TextInputLayout
+    private lateinit var tilCount: TextInputLayout
+    private lateinit var editName: EditText
     private lateinit var editCount: EditText
     private lateinit var buttonSave: Button
 
@@ -28,12 +30,86 @@ class ShopItemActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
-        parseIntent()
 
         shopItemViewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
 
+        parseIntent()
         initViews()
+        addTextChangeListeners()
+        settingUpTheScreen()
         receiveTheTransmittedMessage()
+        observeViewModel()
+    }
+
+    private fun addTextChangeListeners() {
+        editName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                shopItemViewModel.resetErrorInputName()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
+        editCount.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                shopItemViewModel.resetErrorInputCount()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
+    }
+
+    private fun settingUpTheScreen() {
+        when (screenMode) {
+            MODE_EDIT -> launchEditMode()
+            MODE_ADD -> launchAddMode()
+        }
+    }
+
+    private fun observeViewModel() {
+        shopItemViewModel.errorInputCount.observe(this) {
+            val message = if (it) {
+                getString(R.string.error_input_count)
+            } else {
+                null
+            }
+            tilCount.error = message
+        }
+        shopItemViewModel.errorInputName.observe(this) {
+            val message = if (it) {
+                getString(R.string.error_input_name)
+            } else {
+                null
+            }
+            tilName.error = message
+        }
+        shopItemViewModel.shouldCloseScreen.observe(this) {
+            finish()
+        }
+    }
+
+    private fun launchEditMode() {
+        shopItemViewModel.getShopItem(shopItemId)
+        shopItemViewModel.shopItem.observe(this) {
+            editName.setText(it.name)
+            editCount.setText(it.count.toString())
+        }
+        buttonSave.setOnClickListener {
+            shopItemViewModel.editShopItem(editName.text?.toString(), editCount.text?.toString())
+        }
+    }
+
+    private fun launchAddMode() {
+        buttonSave.setOnClickListener {
+            shopItemViewModel.addShopItem(editName.text?.toString(), editCount.text?.toString())
+        }
     }
 
     /**fun проверки правильно ли переданы параметры интента
@@ -59,7 +135,7 @@ class ShopItemActivity : AppCompatActivity() {
     private fun initViews() {
         tilName = findViewById(R.id.text_input_layout_name)
         tilCount = findViewById(R.id.text_input_layout_count)
-        editText = findViewById(R.id.edit_text_name)
+        editName = findViewById(R.id.edit_text_name)
         editCount = findViewById(R.id.edit_count)
         buttonSave = findViewById(R.id.button_save)
     }
