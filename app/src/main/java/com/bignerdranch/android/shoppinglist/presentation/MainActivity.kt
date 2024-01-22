@@ -1,13 +1,13 @@
 package com.bignerdranch.android.shoppinglist.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.shoppinglist.R
 import com.bignerdranch.android.shoppinglist.presentation.recyclerView.ShopListAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,7 +22,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
         }
+
         initRecyclerView()
+        onClickFloatingButtonAddItem()
         onClick()
     }
 
@@ -64,13 +66,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onClick() {
-        with(shopListAdapter) {
-            onShopItemClickLongListener = {
-                viewModel.changeEnableState(it)
-            }
-            onShopItemClickListener = {
-                Log.d("MainActivity", "ЭКРАН ДЛЯ РЕДАКТИРОВАНИЯ ${it.toString()}")
-            }
+        shopListAdapter.onShopItemClickListener = {
+            val intent = ShopItemActivity.newIntentEditItem(this, it.id)
+            startActivity(intent)
+        }
+    }
+
+    private fun onClickFloatingButtonAddItem() {
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.floating_button_add_shop_item)
+        buttonAddItem.setOnClickListener {
+            val intent = ShopItemActivity.newIntentAddItem(this)
+            startActivity(intent)
         }
     }
 }
